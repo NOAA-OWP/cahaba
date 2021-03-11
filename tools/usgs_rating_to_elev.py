@@ -39,8 +39,8 @@ def usgs_rating_to_elev(API_BASE_URL, list_of_gage_sites, workspace):
 
     '''
     #Define URLs for metadata and rating curve
-    metadata_url = f'{API_URL}/metadata'
-    rating_curve_url = f'{API_URL}/rating_curve'
+    metadata_url = f'{API_BASE_URL}/metadata'
+    rating_curve_url = f'{API_BASE_URL}/rating_curve'
     
     #Define arguments to retrieve metadata and then get metadata from WRDS
     select_by = 'usgs_site_code'
