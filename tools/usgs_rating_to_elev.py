@@ -2,6 +2,7 @@
 
 import pandas as pd
 import geopandas as gpd
+from pathlib import Path
 from tools_shared_functions import get_metadata, get_datum, ngvd_to_navd_ft, get_rating_curve
 from dotenv import load_dotenv
 import os
@@ -9,7 +10,7 @@ import argparse
 
 load_dotenv()
 #import variables from .env file
-API_DEV_BASE_URL = os.getenv("API_BASE_URL")
+API_DEV_BASE_URL = os.getenv("API_DEV_BASE_URL")
 
 def usgs_rating_to_elev(workspace, list_of_gage_sites):
     '''
