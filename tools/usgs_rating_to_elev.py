@@ -5,12 +5,13 @@ import geopandas as gpd
 from tools_shared_functions import get_metadata, get_datum, ngvd_to_navd_ft, get_rating_curve
 from dotenv import load_dotenv
 import os
+import argparse
 
 load_dotenv()
 #import variables from .env file
-API_BASE_URL = os.getenv("API_BASE_URL")
+API_DEV_BASE_URL = os.getenv("API_BASE_URL")
 
-def usgs_rating_to_elev(API_BASE_URL, list_of_gage_sites, workspace):
+def usgs_rating_to_elev(workspace, list_of_gage_sites):
     '''
     Provided a list of usgs gage sites returns rating curves adjusted to 
     elevation NAVD. Workflow as follows:
@@ -39,8 +40,8 @@ def usgs_rating_to_elev(API_BASE_URL, list_of_gage_sites, workspace):
 
     '''
     #Define URLs for metadata and rating curve
-    metadata_url = f'{API_BASE_URL}/metadata'
-    rating_curve_url = f'{API_BASE_URL}/rating_curve'
+    metadata_url = f'{API_DEV_BASE_URL}/metadata'
+    rating_curve_url = f'{API_DEV_BASE_URL}/rating_curve'
     
     #Define arguments to retrieve metadata and then get metadata from WRDS
     select_by = 'usgs_site_code'
@@ -91,15 +92,15 @@ if __name__ == '__main__':
     #Parse arguments
     parser = argparse.ArgumentParser(description = 'Retrieve USGS rating curves adjusted to elevation (NAVD88)')
     parser.add_argument('-w', '--workspace', help = 'Workspace where all data will be stored.', required = True)
-    parser.add_argument('-l', '--list_of_usgs_gages',  help = 'List of usgs sites supplied as a file', required = True)
+    parser.add_argument('-l', '--list_of_gage_sites',  help = 'csv containing list of usgs sites supplied as a file', required = True)
         
     #Extract to dictionary and assign to variables.
     args = vars(parser.parse_args())
     
     #Convert csv list to python list
-    with open(args['list_of_usgs_gages']) as f:
-        hucs = f.read().splitlines()
-    args['list_of_usgs_gages'] = hucs
+    with open(args['list_of_gage_sites']) as f:
+        sites = f.read().splitlines()
+    args['list_of_gage_sites'] = sites
 
     #Run create_flow_forecast_file
-    static_flow_lids(**args)
+    usgs_rating_to_elev(**args)
